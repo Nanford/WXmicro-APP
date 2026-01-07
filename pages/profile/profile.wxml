@@ -1,0 +1,87 @@
+<!-- pages/profile/profile.wxml - Redesigned to match competitor -->
+<view class="container profile-container">
+  
+  <view class="header-section">
+    <view class="user-row" bindtap="handleLogin">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/assets/default-avatar.png'}}" mode="aspectFill"></image>
+      <view class="user-info">
+        <view class="nickname-row">
+          <text class="nickname">{{userInfo.nickName || '微信用户'}}</text>
+          <text class="member-badge" wx:if="{{isLoggedIn && userInfo.isMember}}">成长会员</text>
+        </view>
+        <text class="member-expire">{{isLoggedIn && userInfo.isMember ? '会员剩余: 2天21小时54分钟' : '点击登录'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="vip-banner">
+    <image class="vip-icon" src="/assets/gift-icon.png" mode="aspectFit"></image>
+    <view class="vip-content">
+      <text class="vip-title">开通VIP, 智慧每日相伴</text>
+      <text class="vip-desc">每日畅聊不限时长</text>
+    </view>
+    <view class="btn-renew">立即续费 ></view>
+  </view>
+
+  <view class="feature-row">
+    <view class="feature-item" bindtap="handleMenuClick" data-action="growth">
+      <text>💛 成长陪伴</text>
+    </view>
+    <view class="feature-item" bindtap="handleMenuClick" data-action="calendar">
+      <text>📅 情绪日历</text>
+    </view>
+    <view class="feature-item" bindtap="handleMenuClick" data-action="analysis">
+      <text>🧠 心智分析</text>
+    </view>
+  </view>
+
+  <view class="menu-list">
+    <view class="menu-item" bindtap="handleMenuClick" data-action="collection">
+      <view class="menu-left">
+        <text>☆</text>
+        <text style="margin-left: 20rpx;">我的收藏</text>
+      </view>
+      <view class="menu-arrow">></view>
+    </view>
+
+    <view class="menu-item" bindtap="handleMenuClick" data-action="assessment">
+      <view class="menu-left">
+        <text>📋</text>
+        <text style="margin-left: 20rpx;">我的测评</text>
+      </view>
+      <view class="menu-arrow">></view>
+    </view>
+
+    <view class="menu-item" bindtap="handleMenuClick" data-action="exchange">
+      <view class="menu-left">
+        <text>🎁</text>
+        <text style="margin-left: 20rpx;">兑换中心</text>
+      </view>
+      <view class="menu-arrow">></view>
+    </view>
+
+    <view class="menu-item" bindtap="handleMenuClick" data-action="contact">
+      <view class="menu-left">
+        <text>🎧</text>
+        <text style="margin-left: 20rpx;">联系客服</text>
+      </view>
+      <view class="menu-arrow">></view>
+    </view>
+
+    <view class="menu-item" bindtap="handleMenuClick" data-action="editNickname" wx:if="{{isLoggedIn}}">
+      <view class="menu-left">
+        <text>✏️</text>
+        <text style="margin-left: 20rpx;">修改个人信息</text>
+      </view>
+      <view class="menu-arrow">></view>
+    </view>
+
+    <view class="menu-item" bindtap="handleMenuClick" data-action="logout" wx:if="{{isLoggedIn}}">
+      <view class="menu-left">
+        <text>🚪</text>
+        <text style="margin-left: 20rpx;">退出登录</text>
+      </view>
+      <view class="menu-arrow">></view>
+    </view>
+  </view>
+</view>

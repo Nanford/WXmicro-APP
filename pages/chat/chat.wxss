@@ -47,13 +47,19 @@
   margin-right: 20rpx;
 }
 
-.bubble {
+.bubble-wrapper {
+  display: flex;
+  flex-direction: column;
   max-width: 540rpx;
+}
+
+.bubble {
   padding: 24rpx 30rpx;
   font-size: 28rpx;
-  line-height: 1.5;
+  line-height: 1.6;
   border-radius: 24rpx;
   word-break: break-all;
+  white-space: pre-wrap; /* Preserve line breaks */
 }
 
 .msg-user .bubble {
@@ -66,6 +72,29 @@
   background: #fff;
   color: #333;
   border-top-left-radius: 4rpx;
+}
+
+/* Error message styling */
+.msg-error .bubble {
+  background: #fff5f5;
+  border: 1rpx solid #ffcccc;
+  color: #cc3333;
+}
+
+.retry-btn {
+  margin-top: 12rpx;
+  padding: 12rpx 24rpx;
+  background: #fff;
+  border: 1rpx solid var(--primary-color-start);
+  border-radius: 16rpx;
+  color: var(--primary-color-start);
+  font-size: 24rpx;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.retry-btn:active {
+  opacity: 0.7;
 }
 
 .input-area {
@@ -136,4 +165,3 @@
     margin-right: 16rpx;
     flex-shrink: 0;
 }
-

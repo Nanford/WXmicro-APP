@@ -84,8 +84,8 @@ Page({
     },
 
     goToChat() {
-        wx.switchTab({
-            url: '/pages/index/index'
+        wx.navigateTo({
+            url: '/pages/chat/chat?from=calendar'
         });
     }
 });

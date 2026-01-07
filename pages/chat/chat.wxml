@@ -9,11 +9,18 @@
     <block wx:for="{{messages}}" wx:key="index">
       <view class="time-tip" wx:if="{{item.time}}">{{item.time}}</view>
       
-      <view class="msg-item {{item.type === 'user' ? 'msg-user' : 'msg-ai'}}">
+      <view class="msg-item {{item.type === 'user' ? 'msg-user' : 'msg-ai'}} {{item.error ? 'msg-error' : ''}}">
         <image wx:if="{{item.type === 'ai'}}" class="avatar ai-avatar" src="/assets/ai-avatar-small.png"></image>
         
-        <view class="bubble">
-          <text>{{item.content}}</text>
+        <view class="bubble-wrapper">
+          <view class="bubble">
+            <text>{{item.content}}</text>
+          </view>
+          
+          <!-- Retry button for error messages -->
+          <view wx:if="{{item.error}}" class="retry-btn" bindtap="handleRetry" data-index="{{index}}">
+            <text>点击重试</text>
+          </view>
         </view>
         
         <!-- User avatar could be added here if needed -->

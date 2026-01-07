@@ -39,3 +39,5 @@ npm-debug.log*
 # Development utility scripts
 create-icons.js
 compress-icons.js
+move-assets.js
+move-avatar.js

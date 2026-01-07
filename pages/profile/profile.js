@@ -12,6 +12,9 @@ Page({
     },
 
     checkLoginStatus() {
+        const app = getApp();
+        if (!app || !app.globalData) return;
+
         const isLoggedIn = app.globalData.isLoggedIn;
         const userInfo = app.globalData.userInfo;
         this.setData({
@@ -31,6 +34,24 @@ Page({
     handleMenuClick(e) {
         const action = e.currentTarget.dataset.action;
         switch (action) {
+            case 'growth':
+                // Navigate to chat for psychological counseling
+                wx.navigateTo({
+                    url: '/pages/chat/chat?from=profile'
+                });
+                break;
+            case 'calendar':
+                // Navigate to calendar page
+                wx.switchTab({
+                    url: '/pages/calendar/calendar'
+                });
+                break;
+            case 'analysis':
+                // Navigate to assessment page
+                wx.switchTab({
+                    url: '/pages/assessment/assessment'
+                });
+                break;
             case 'contact':
                 this.showContact();
                 break;

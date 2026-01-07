@@ -1,20 +1,28 @@
 // pages/chat/chat.js
-const { post } = require('../../utils/request');
+const kimiAI = require('../../utils/kimi-ai');
 const { formatTime } = require('../../utils/util');
 
 Page({
     data: {
-        messages: [], // { type: 'user'|'ai', content: '', time: '' }
+        messages: [], // { type: 'user'|'ai', content: '', time: '', error: false }
         inputValue: '',
         scrollTop: 0,
-        isTyping: false
+        isTyping: false,
+        fromPage: '' // Track where user came from
     },
 
-    onLoad() {
-        // Initial greeting
+    onLoad(options) {
+        // Get entry point
+        const fromPage = options.from || 'index';
+        this.setData({ fromPage });
+
+        // Initialize Kimi AI conversation
+        kimiAI.initConversation();
+
+        // Show welcome message
         this.addMessage({
             type: 'ai',
-            content: '你好！我是你的AI伙伴，今天想聊点什么？'
+            content: kimiAI.getWelcomeMessage()
         });
     },
 
@@ -34,26 +42,45 @@ Page({
             content
         });
 
-        this.setData({ inputValue: '' });
-        this.setData({ isTyping: true });
+        this.setData({ inputValue: '', isTyping: true });
 
         try {
-            // Simulate network delay and typing
-            setTimeout(async () => {
-                const res = await post('/chat/send', { message: content });
-                this.setData({ isTyping: false });
+            // Call Kimi AI
+            const aiResponse = await kimiAI.sendMessage(content);
 
-                if (res.code === 200) {
-                    const reply = res.data.reply || '正在思考中...';
-                    this.streamReply(reply);
-                }
-            }, 1000);
+            this.setData({ isTyping: false });
+
+            // Stream the reply for better UX
+            this.streamReply(aiResponse);
+
         } catch (err) {
             this.setData({ isTyping: false });
-            wx.showToast({
-                title: '发送失败',
-                icon: 'none'
+
+            console.error('Kimi AI error:', err);
+
+            // Add error message with retry option
+            this.addMessage({
+                type: 'ai',
+                content: err.message || '抱歉，我遇到了一些问题。请稍后再试。',
+                error: true,
+                retryContent: content
             });
+        }
+    },
+
+    // Retry failed message
+    handleRetry(e) {
+        const index = e.currentTarget.dataset.index;
+        const message = this.data.messages[index];
+
+        if (message.retryContent) {
+            // Remove error message
+            const messages = this.data.messages.filter((_, i) => i !== index);
+            this.setData({ messages });
+
+            // Retry sending
+            this.setData({ inputValue: message.retryContent });
+            this.handleSend();
         }
     },
 
@@ -81,13 +108,17 @@ Page({
     },
 
     streamReply(fullText) {
-        // Simple typing effect simulation
+        // Typing effect simulation
         let currentText = '';
         const chars = fullText.split('');
         let idx = 0;
 
         // Add empty AI message first
-        const messages = [...this.data.messages, { type: 'ai', content: '', _rawTime: new Date() }];
+        const messages = [...this.data.messages, {
+            type: 'ai',
+            content: '',
+            _rawTime: new Date()
+        }];
         const msgIndex = messages.length - 1;
         this.setData({ messages });
 
@@ -96,7 +127,10 @@ Page({
                 clearInterval(timer);
                 return;
             }
-            currentText += chars[idx];
+
+            // Add 2-3 chars at a time for smoother effect
+            const charsToAdd = chars.slice(idx, idx + 2).join('');
+            currentText += charsToAdd;
 
             const upKey = `messages[${msgIndex}].content`;
             this.setData({
@@ -104,8 +138,8 @@ Page({
                 scrollTop: (msgIndex + 1) * 1000
             });
 
-            idx++;
-        }, 50);
+            idx += 2;
+        }, 30); // Faster streaming
     },
 
     toggleVoice() {
@@ -113,5 +147,10 @@ Page({
             title: '语音输入功能开发中',
             icon: 'none'
         });
+    },
+
+    onUnload() {
+        // Optional: Save conversation history when leaving
+        // Could implement persistence here if needed
     }
 })
