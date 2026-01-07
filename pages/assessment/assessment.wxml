@@ -1,0 +1,43 @@
+<!-- pages/assessment/assessment.wxml - Redesigned to match competitor -->
+<view class="container assessment-container">
+  
+  <scroll-view class="filter-bar" scroll-x enable-flex>
+    <block wx:for="{{filters}}" wx:key="index">
+      <view 
+        class="filter-item {{activeFilter === index ? 'active' : ''}}"
+        bindtap="switchFilter"
+        data-index="{{index}}"
+      >{{item}}</view>
+    </block>
+  </scroll-view>
+
+  <view class="list-container">
+    <block wx:for="{{list}}" wx:key="id">
+      <view class="assess-card" bindtap="goToDetail" data-id="{{item.id}}">
+        <image class="card-cover" src="{{item.image || '/assets/cover-placeholder.png'}}" mode="aspectFill" lazy-load></image>
+        <view class="card-info">
+          <view>
+            <text class="card-title">{{item.title}}</text>
+            <text class="card-desc">{{item.desc}}</text>
+          </view>
+          <view class="card-meta">
+            <view class="price-row">
+              <text class="price-label">限时</text>
+              <text class="currency">¥</text>
+              <text class="price">{{item.price}}</text>
+              <text class="count">{{item.count}}人已测</text>
+            </view>
+            <view class="btn-assess">立即测评</view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- Floating gift icon -->
+  <view class="float-gift">
+    <image class="gift-icon" src="/assets/gift-icon.png" mode="aspectFit"></image>
+    <text class="gift-tag">新人福利</text>
+  </view>
+
+</view>

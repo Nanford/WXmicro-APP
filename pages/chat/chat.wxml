@@ -1,0 +1,51 @@
+<!-- pages/chat/chat.wxml -->
+<view class="container chat-container">
+  <scroll-view 
+    class="msg-list" 
+    scroll-y 
+    scroll-top="{{scrollTop}}"
+    enable-flex
+  >
+    <block wx:for="{{messages}}" wx:key="index">
+      <view class="time-tip" wx:if="{{item.time}}">{{item.time}}</view>
+      
+      <view class="msg-item {{item.type === 'user' ? 'msg-user' : 'msg-ai'}}">
+        <image wx:if="{{item.type === 'ai'}}" class="avatar ai-avatar" src="/assets/ai-avatar-small.png"></image>
+        
+        <view class="bubble">
+          <text>{{item.content}}</text>
+        </view>
+        
+        <!-- User avatar could be added here if needed -->
+      </view>
+    </block>
+
+    <view class="typing-indicator" wx:if="{{isTyping}}">
+        <text>AI正在输入...</text>
+    </view>
+    
+    <!-- Padding for bottom input -->
+    <view style="height: 120rpx;"></view> 
+  </scroll-view>
+
+  <view class="input-area">
+    <view class="btn-voice" bindtap="toggleVoice">
+      <text>🎤</text>
+    </view>
+    <view class="input-box">
+      <textarea 
+        class="input-textarea"
+        value="{{inputValue}}"
+        bindinput="handleInput"
+        auto-height
+        fixed
+        maxlength="500"
+        cursor-spacing="20"
+      ></textarea>
+    </view>
+    <view 
+      class="btn-send {{inputValue ? 'active' : ''}}" 
+      bindtap="handleSend"
+    >发送</view>
+  </view>
+</view>

@@ -1,0 +1,41 @@
+# Environment variables (API keys - CRITICAL!)
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Dependencies
+node_modules/
+
+# WeChat Mini Program
+miniprogram_npm/
+
+# Build files
+dist/
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project config (may contain personal info)
+project.private.config.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp files
+*.tmp
+.temp/
+
+# Development utility scripts
+create-icons.js
+compress-icons.js

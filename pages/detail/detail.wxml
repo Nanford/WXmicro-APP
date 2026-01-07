@@ -1,0 +1,34 @@
+<!-- pages/detail/detail.wxml -->
+<view class="container detail-container">
+  
+  <view class="cover-area">
+    <image class="cover-img" src="{{info.cover || '/assets/cover-large.png'}}" mode="aspectFill"></image>
+    <view class="back-btn" bindtap="handleBack">
+        <text class="back-arrow">&lt;</text>
+    </view>
+  </view>
+
+  <view class="content-area">
+      <view class="header-info">
+          <text class="title">{{info.title}}</text>
+          <text class="subtitle">{{info.subTitle}}</text>
+      </view>
+
+      <view class="price-info">
+          <view class="price-row">
+            <text class="symbol">¥</text>
+            <text class="amount">{{info.price}}</text>
+            <text class="original">¥{{info.originalPrice}}</text>
+          </view>
+          <text class="count">{{info.count}}人已参与</text>
+      </view>
+
+      <view class="rich-content">
+          <rich-text nodes="{{info.content}}"></rich-text>
+      </view>
+  </view>
+
+  <view class="bottom-bar">
+      <view class="btn-action" bindtap="handleAction">{{btnText}}</view>
+  </view>
+</view>

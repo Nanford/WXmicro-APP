@@ -1,0 +1,139 @@
+/** pages/chat/chat.wxss */
+.chat-container {
+  height: 100vh;
+  background-color: var(--bg-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.msg-list {
+  flex: 1;
+  padding: 20rpx 0;
+  box-sizing: border-box;
+}
+
+.time-tip {
+  text-align: center;
+  font-size: 24rpx;
+  color: #999;
+  margin: 20rpx 0;
+}
+
+.msg-item {
+  display: flex;
+  margin-bottom: 30rpx;
+  padding: 0 30rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.msg-user {
+  flex-direction: row-reverse;
+}
+
+.msg-ai {
+  flex-direction: row;
+}
+
+.avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background-color: #fff;
+  flex-shrink: 0;
+}
+
+.ai-avatar {
+  margin-right: 20rpx;
+}
+
+.bubble {
+  max-width: 540rpx;
+  padding: 24rpx 30rpx;
+  font-size: 28rpx;
+  line-height: 1.5;
+  border-radius: 24rpx;
+  word-break: break-all;
+}
+
+.msg-user .bubble {
+  background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
+  color: #fff;
+  border-top-right-radius: 4rpx;
+}
+
+.msg-ai .bubble {
+  background: #fff;
+  color: #333;
+  border-top-left-radius: 4rpx;
+}
+
+.input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100rpx;
+  background: #fff;
+  border-top: 1rpx solid var(--divider-color);
+  display: flex;
+  align-items: flex-end; /* Align bottom for expanding textarea */
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.input-box {
+  flex: 1;
+  background: #f5f5f5;
+  border-radius: 32rpx;
+  padding: 18rpx 24rpx;
+  margin-right: 20rpx;
+  min-height: 64rpx;
+}
+
+.input-textarea {
+  width: 100%;
+  font-size: 28rpx;
+  line-height: 1.4;
+  max-height: 200rpx; /* Limit expansion */
+}
+
+.btn-send {
+  width: 120rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  border-radius: 32rpx;
+  background: #eee;
+  color: #999;
+  font-size: 28rpx;
+  flex-shrink: 0;
+  margin-bottom: 2rpx; /* Align with input box visual center roughly */
+}
+
+.btn-send.active {
+  background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
+  color: #fff;
+}
+
+.typing-indicator {
+    padding: 0 30rpx;
+    font-size: 24rpx;
+    color: #999;
+    margin-bottom: 20rpx;
+}
+
+.btn-voice {
+    width: 64rpx;
+    height: 64rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    border-radius: 50%;
+    margin-right: 16rpx;
+    flex-shrink: 0;
+}
+

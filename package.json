@@ -1,0 +1,16 @@
+{
+  "name": "ai-microapp",
+  "version": "1.0.0",
+  "description": "This project is a WeChat Mini Program (微信小程序). To run and test it, you need the **WeChat Developer Tools**.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "sharp": "^0.34.5"
+  }
+}

@@ -1,0 +1,133 @@
+/** pages/detail/detail.wxss */
+.detail-container {
+  padding-bottom: 120rpx; /* Safe area for fixed bottom */
+}
+
+.cover-area {
+  height: 420rpx;
+  width: 100%;
+  position: relative;
+}
+
+.cover-img {
+  width: 100%;
+  height: 100%;
+  background: #eee;
+}
+
+.back-btn {
+  position: absolute;
+  top: 60rpx; /* Adjust for status bar */
+  left: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+  background: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.back-arrow {
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.content-area {
+  padding: 0 30rpx;
+  background: #fff;
+}
+
+.header-info {
+  margin-top: 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: var(--text-main);
+  margin-bottom: 12rpx;
+}
+
+.subtitle {
+  font-size: 24rpx;
+  color: var(--text-grey);
+}
+
+.price-info {
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  border-bottom: 1rpx solid var(--divider-color);
+  padding-bottom: 20rpx;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+}
+
+.symbol {
+  font-size: 24rpx;
+  color: #FF4D4F;
+  margin-right: 4rpx;
+}
+
+.amount {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #FF4D4F;
+  margin-right: 16rpx;
+}
+
+.original {
+  font-size: 24rpx;
+  color: var(--text-grey);
+  text-decoration: line-through;
+}
+
+.count {
+  font-size: 24rpx;
+  color: var(--text-grey);
+}
+
+.rich-content {
+  margin-top: 30rpx;
+  line-height: 1.6;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100rpx;
+  background: #fff;
+  box-shadow: 0 -4rpx 10rpx rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.btn-action {
+  width: 690rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  background: linear-gradient(90deg, var(--primary-color-start), var(--primary-color-end));
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

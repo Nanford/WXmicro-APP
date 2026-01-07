@@ -1,0 +1,38 @@
+<!-- pages/index/index.wxml - Match competitor design -->
+<view class="container home-container">
+  
+  <!-- AI Card with portrait -->
+  <view class="ai-card">
+    <view class="ai-card-left">
+      <text class="ai-greeting">Hi,{{greeting}}!</text>
+      <text class="ai-sub">今天的你感觉怎么样?有什么想要和我交流或分享的吗?</text>
+      <text class="ai-hint">只要你说,我随时都在~</text>
+      <view class="ai-action-btn" bindtap="handleChat">
+        <text>去聊聊</text>
+        <text class="arrow">→</text>
+      </view>
+    </view>
+    <view class="ai-card-right">
+      <image class="ai-avatar" src="/assets/portrait_img.png" mode="aspectFit"></image>
+    </view>
+  </view>
+
+  <!-- Recommendation cards -->
+  <view class="recommend-section">
+    <block wx:for="{{recommendations}}" wx:key="id">
+      <view class="recommend-card">
+        <view class="card-tag">{{item.tag || '学习社群'}}</view>
+        <view class="card-row">
+          <view class="card-content">
+            <text class="card-title">{{item.title}}</text>
+            <text class="card-desc">{{item.desc}}</text>
+          </view>
+          <view class="card-btn" bindtap="handleCardClick" data-id="{{item.id}}">
+            {{item.btnText || '去学习'}}
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+</view>

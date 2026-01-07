@@ -1,0 +1,55 @@
+<!-- pages/calendar/calendar.wxml - Redesigned to match competitor -->
+<view class="container calendar-container">
+  
+  <view class="date-header">
+    <text class="current-date">{{currentMonth}}月{{currentDay}}日</text>
+    <view class="view-switch">
+      <view class="switch-btn {{viewMode === 'day' ? 'active' : ''}}" bindtap="switchView" data-mode="day">日</view>
+      <view class="switch-btn {{viewMode === 'month' ? 'active' : ''}}" bindtap="switchView" data-mode="month">月</view>
+    </view>
+  </view>
+
+  <!-- Day View - Horizontal date picker -->
+  <block wx:if="{{viewMode === 'day'}}">
+    <scroll-view class="day-scroll" scroll-x enable-flex>
+      <view class="day-list">
+        <block wx:for="{{weekDays}}" wx:key="index">
+          <view class="day-item {{item.isToday ? 'today' : ''}}" bindtap="selectDay" data-day="{{item.day}}">
+            <text class="day-num">{{item.day}}</text>
+            <view class="day-dot {{item.hasRecord ? 'has-record' : ''}}"></view>
+          </view>
+        </block>
+      </view>
+    </scroll-view>
+
+    <view class="empty-card">
+      <image class="empty-image" src="/assets/calendar-empty.png" mode="aspectFit"></image>
+      <text class="empty-title">今天的情绪日历还没解锁哦</text>
+      <text class="empty-desc">快去和李老师聊聊今天的心情，\n解锁今天的情绪日历吧</text>
+      <view class="empty-btn" bindtap="goToChat">去成长</view>
+    </view>
+  </block>
+
+  <!-- Month View - Calendar grid -->
+  <block wx:if="{{viewMode === 'month'}}">
+    <view class="month-grid">
+      <view class="week-header">
+        <text>日</text>
+        <text>一</text>
+        <text>二</text>
+        <text>三</text>
+        <text>四</text>
+        <text>五</text>
+        <text>六</text>
+      </view>
+      <view class="month-days">
+        <block wx:for="{{days}}" wx:key="index">
+          <view class="month-day {{item.isToday ? 'today' : ''}} {{item.isOtherMonth ? 'other-month' : ''}}">
+            <text>{{item.day}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+  </block>
+
+</view>

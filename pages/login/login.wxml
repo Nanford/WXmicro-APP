@@ -1,0 +1,30 @@
+<!-- pages/login/login.wxml -->
+<view class="container login-container">
+  <view class="logo-area">
+    <image class="logo" src="/assets/logo.png" mode="aspectFit"></image> <!-- Ensure assets/logo.png exists or use a placeholder -->
+    <text class="welcome-text">欢迎进入\n「AI彩虹之间」的对话空间</text>
+  </view>
+
+  <view class="action-area">
+    <button 
+      class="btn-login" 
+      open-type="getPhoneNumber" 
+      bindgetphonenumber="getPhoneNumber"
+      disabled="{{!agreed}}"
+      style="opacity: {{agreed ? 1 : 0.6}}"
+    >
+      微信一键登录
+    </button>
+    <view class="btn-guest" bindtap="handleGuestLogin">暂不登录</view>
+  </view>
+
+  <view class="agreement-area">
+    <label class="checkbox-container" bindtap="toggleAgreement">
+      <checkbox checked="{{agreed}}" color="#6B5FE8" />
+      <text class="agreement-text">我已阅读并同意</text>
+    </label>
+    <text class="link" bindtap="viewAgreement" data-type="user">《用户协议》</text>
+    <text class="text-divider">和</text>
+    <text class="link" bindtap="viewAgreement" data-type="privacy">《隐私政策》</text>
+  </view>
+</view>
