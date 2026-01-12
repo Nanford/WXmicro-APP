@@ -8,7 +8,7 @@
  * development: 本地开发环境
  * production: 生产环境
  */
-const ENV = 'development'; // 更改为 'production' 切换到生产环境
+const ENV = 'production'; // 更改为 'production' 切换到生产环境
 
 /**
  * API基础URL配置
@@ -22,7 +22,7 @@ const API_CONFIG = {
     },
     // 生产环境 - 部署后的域名
     production: {
-        BASE_URL: 'https://your-domain.com', // ⚠️ 部署时替换为你的域名
+        BASE_URL: 'https://hcm.hootoolai.com', // 生产环境域名
         USE_MOCK: false
     }
 };
