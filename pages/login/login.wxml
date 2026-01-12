@@ -2,7 +2,7 @@
 <view class="container login-container">
   <view class="logo-area">
     <image class="logo" src="/assets/logo.png" mode="aspectFit"></image> <!-- Ensure assets/logo.png exists or use a placeholder -->
-    <text class="welcome-text">欢迎进入\n「AI彩虹之间」的对话空间</text>
+    <text class="welcome-text">欢迎进入\n「AI彩虹老师」的对话空间</text>
   </view>
 
   <view class="action-area">

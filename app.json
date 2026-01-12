@@ -11,7 +11,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#ffffff",
-    "navigationBarTitleText": "AI Rainbow",
+    "navigationBarTitleText": "AI彩虹老师",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {

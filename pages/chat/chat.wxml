@@ -14,7 +14,7 @@
         
         <view class="bubble-wrapper">
           <view class="bubble">
-            <text>{{item.content}}</text>
+            <text user-select>{{item.content}}</text>
           </view>
           
           <!-- Retry button for error messages -->

@@ -13,7 +13,7 @@
       </view>
     </view>
     <view class="ai-card-right">
-      <image class="ai-avatar" src="/assets/portrait_img.png" mode="aspectFit"></image>
+      <image class="ai-avatar" src="/assets/portrait_img.png" mode="aspectFill"></image>
     </view>
   </view>
 

@@ -18,7 +18,44 @@
   "compileType": "miniprogram",
   "simulatorPluginLibVersion": {},
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "node_modules"
+      },
+      {
+        "type": "folder",
+        "value": "backend"
+      },
+      {
+        "type": "folder",
+        "value": ".git"
+      },
+      {
+        "type": "file",
+        "value": "package.json"
+      },
+      {
+        "type": "file",
+        "value": "package-lock.json"
+      },
+      {
+        "type": "file",
+        "value": "create-icons.js"
+      },
+      {
+        "type": "file",
+        "value": "move-assets.js"
+      },
+      {
+        "type": "file",
+        "value": "move-avatar.js"
+      },
+      {
+        "type": "glob",
+        "value": "*.md"
+      }
+    ],
     "include": []
   },
   "appid": "wxfad3c48ef31755f8",

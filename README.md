@@ -1,4 +1,4 @@
-# AI Rainbow (AI彩虹之间) - WeChat Mini Program
+# AI Rainbow (AI彩虹老师) - WeChat Mini Program
 
 ## Project Setup & Testing
 

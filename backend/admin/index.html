@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI彩虹老师 - 管理后台</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <!-- 登录界面 -->
+    <div id="login-container" class="login-container">
+        <div class="login-box">
+            <div class="login-logo">🌈</div>
+            <h1>AI彩虹老师</h1>
+            <p class="login-subtitle">管理后台</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" placeholder="请输入用户名" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" placeholder="请输入密码" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">登 录</button>
+            </form>
+            <p id="login-error" class="error-message"></p>
+        </div>
+    </div>
+
+    <!-- 管理后台主界面 -->
+    <div id="app-container" class="app-container hidden">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="logo-icon">🌈</span>
+                <span class="logo-text">AI彩虹老师</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span>仪表盘</span>
+                </a>
+                <a href="#media" class="nav-item" data-page="media">
+                    <span class="nav-icon">🖼️</span>
+                    <span>素材库</span>
+                </a>
+                <a href="#assessments" class="nav-item" data-page="assessments">
+                    <span class="nav-icon">📝</span>
+                    <span>测评管理</span>
+                </a>
+                <a href="#recommendations" class="nav-item" data-page="recommendations">
+                    <span class="nav-icon">⭐</span>
+                    <span>推荐管理</span>
+                </a>
+                <a href="#contents" class="nav-item" data-page="contents">
+                    <span class="nav-icon">📚</span>
+                    <span>内容管理</span>
+                </a>
+                <a href="#ai-config" class="nav-item" data-page="ai-config">
+                    <span class="nav-icon">🤖</span>
+                    <span>AI配置</span>
+                </a>
+                <a href="#settings" class="nav-item" data-page="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span>系统设置</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="btn btn-ghost btn-block">退出登录</button>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h2 id="page-title">仪表盘</h2>
+                <div class="top-bar-actions">
+                    <span id="admin-user">管理员</span>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- 仪表盘 - Bento Grid布局 -->
+                <div id="page-dashboard" class="page active">
+                    <div class="bento-grid">
+                        <div class="bento-card">
+                            <div class="card-icon">📝</div>
+                            <div class="card-value" id="stat-assessments">0</div>
+                            <div class="card-label">测评总数</div>
+                            <div class="card-detail">
+                                <span class="online">● 上架 <b id="stat-assessments-online">0</b></span>
+                                <span class="offline">● 下架 <b id="stat-assessments-offline">0</b></span>
+                            </div>
+                        </div>
+                        <div class="bento-card">
+                            <div class="card-icon">⭐</div>
+                            <div class="card-value" id="stat-recommendations">0</div>
+                            <div class="card-label">推荐内容</div>
+                            <div class="card-detail">
+                                <span class="online">● 上架 <b id="stat-recommendations-online">0</b></span>
+                                <span class="offline">● 下架 <b id="stat-recommendations-offline">0</b></span>
+                            </div>
+                        </div>
+                        <div class="bento-card">
+                            <div class="card-icon">📚</div>
+                            <div class="card-value" id="stat-contents">0</div>
+                            <div class="card-label">内容详情</div>
+                            <div class="card-detail">
+                                <span class="online">● 上架 <b id="stat-contents-online">0</b></span>
+                                <span class="offline">● 下架 <b id="stat-contents-offline">0</b></span>
+                            </div>
+                        </div>
+                        <div class="bento-card">
+                            <div class="card-icon">🤖</div>
+                            <div class="card-value" id="stat-ai-status">--</div>
+                            <div class="card-label">AI服务</div>
+                            <div class="card-detail">
+                                <span id="stat-ai-model">模型：--</span>
+                            </div>
+                        </div>
+                        <div class="bento-card span-2 quick-actions-card">
+                            <h3>快捷操作</h3>
+                            <div class="quick-actions-grid">
+                                <button class="quick-action-btn" onclick="showPage('media')">
+                                    <span class="action-icon">🖼️</span> 上传素材
+                                </button>
+                                <button class="quick-action-btn" onclick="showPage('assessments')">
+                                    <span class="action-icon">📝</span> 管理测评
+                                </button>
+                                <button class="quick-action-btn" onclick="showPage('recommendations')">
+                                    <span class="action-icon">⭐</span> 管理推荐
+                                </button>
+                                <button class="quick-action-btn" onclick="showPage('ai-config')">
+                                    <span class="action-icon">🤖</span> 配置AI
+                                </button>
+                                <button class="quick-action-btn" onclick="createBackup()">
+                                    <span class="action-icon">💾</span> 创建备份
+                                </button>
+                                <button class="quick-action-btn" onclick="exportData()">
+                                    <span class="action-icon">📦</span> 导出数据
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bento-card span-2">
+                            <div class="card-icon">🖼️</div>
+                            <div class="card-value" id="stat-media">0</div>
+                            <div class="card-label">素材总数</div>
+                            <div class="card-detail">
+                                <span>点击素材库管理图片和视频</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 素材库 -->
+                <div id="page-media" class="page">
+                    <div class="page-header">
+                        <div class="page-filters">
+                            <select id="media-type-filter" onchange="loadMedia()">
+                                <option value="all">全部类型</option>
+                                <option value="image">图片</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="document.getElementById('media-upload').click()">
+                            + 上传素材
+                        </button>
+                        <input type="file" id="media-upload" accept="image/*" multiple style="display: none"
+                            onchange="uploadMedia(event)">
+                    </div>
+
+                    <div class="upload-area" id="media-upload-area">
+                        <div class="upload-icon">📤</div>
+                        <p>拖拽图片到此处上传，或点击按钮选择</p>
+                        <button class="btn btn-outline"
+                            onclick="document.getElementById('media-upload').click()">选择文件</button>
+                    </div>
+
+                    <div id="media-library" class="media-library">
+                        <p class="empty-text">加载中...</p>
+                    </div>
+                </div>
+
+                <!-- 测评管理 -->
+                <div id="page-assessments" class="page">
+                    <div class="page-header">
+                        <div class="page-filters">
+                            <select id="assessment-status-filter" onchange="loadAssessments()">
+                                <option value="all">全部状态</option>
+                                <option value="online">已上架</option>
+                                <option value="offline">已下架</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="openAssessmentModal()">+ 添加测评</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>标题</th>
+                                    <th>分类</th>
+                                    <th>价格</th>
+                                    <th>人数</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assessments-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 推荐管理 -->
+                <div id="page-recommendations" class="page">
+                    <div class="page-header">
+                        <div class="page-filters">
+                            <select id="recommendation-status-filter" onchange="loadRecommendations()">
+                                <option value="all">全部状态</option>
+                                <option value="online">已上架</option>
+                                <option value="offline">已下架</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="openRecommendationModal()">+ 添加推荐</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>标签</th>
+                                    <th>标题</th>
+                                    <th>描述</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recommendations-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 内容管理 -->
+                <div id="page-contents" class="page">
+                    <div class="page-header">
+                        <div class="page-filters">
+                            <select id="content-type-filter" onchange="loadContents()">
+                                <option value="all">全部类型</option>
+                                <option value="course">课程</option>
+                                <option value="guide">指南</option>
+                                <option value="resource">资料包</option>
+                            </select>
+                            <select id="content-status-filter" onchange="loadContents()">
+                                <option value="all">全部状态</option>
+                                <option value="online">已上架</option>
+                                <option value="offline">已下架</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="openContentModal()">+ 添加内容</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>类型</th>
+                                    <th>标题</th>
+                                    <th>价格</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contents-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- AI配置 -->
+                <div id="page-ai-config" class="page">
+                    <div class="config-section">
+                        <h3>AI服务配置</h3>
+                        <form id="ai-config-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="ai-enabled">服务状态</label>
+                                    <select id="ai-enabled">
+                                        <option value="true">启用</option>
+                                        <option value="false">禁用</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ai-model">AI模型</label>
+                                    <select id="ai-model">
+                                        <option value="kimi-k2-0905-Preview">kimi-k2-0905-Preview (推荐)</option>
+                                        <option value="kimi-k2-turbo-preview">kimi-k2-turbo-preview</option>
+                                        <option value="kimi-k2-thinking">kimi-k2-thinking</option>
+                                        <option value="kimi-k2-thinking-turbo">kimi-k2-thinking-turbo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="ai-temperature">温度 (0-1)</label>
+                                    <input type="number" id="ai-temperature" min="0" max="1" step="0.1" value="0.7">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ai-max-tokens">最大Token数</label>
+                                    <input type="number" id="ai-max-tokens" min="100" max="4000" step="100" value="800">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ai-system-prompt">系统提示词</label>
+                                <textarea id="ai-system-prompt" rows="12" placeholder="输入AI系统提示词..."></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">保存配置</button>
+                                <button type="button" class="btn btn-outline" onclick="loadAIConfig()">重置</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 系统设置 -->
+                <div id="page-settings" class="page">
+                    <div class="config-section">
+                        <h3>数据备份与恢复</h3>
+                        <div style="display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap;">
+                            <button class="btn btn-primary" onclick="createBackup()">创建备份</button>
+                            <button class="btn btn-outline" onclick="exportData()">导出数据</button>
+                            <button class="btn btn-outline"
+                                onclick="document.getElementById('import-file').click()">导入数据</button>
+                            <input type="file" id="import-file" accept=".json" style="display: none"
+                                onchange="importData(event)">
+                        </div>
+                        <h4>备份列表</h4>
+                        <div id="backups-list" class="backups-list">
+                            <p class="empty-text">加载中...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal" id="modal-container">
+            <div class="modal-header">
+                <h3 id="modal-title">标题</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片选择器模态框 -->
+    <div id="image-picker-overlay" class="modal-overlay hidden">
+        <div class="modal image-picker-modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>选择图片</h3>
+                <button class="modal-close" onclick="closeImagePicker()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="image-picker-header">
+                    <span id="picker-selected-count">已选择 0 张</span>
+                    <button class="btn btn-primary btn-sm" onclick="confirmImageSelection()">确认选择</button>
+                </div>
+                <div id="image-picker-grid" class="media-library">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast提示 -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

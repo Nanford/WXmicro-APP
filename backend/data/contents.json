@@ -1,0 +1,35 @@
+{
+  "1": {
+    "id": 1,
+    "type": "course",
+    "title": "NLP技巧跟练3天学习营",
+    "subTitle": "AI跟练+真人助教",
+    "price": 99.9,
+    "originalPrice": 199.9,
+    "count": 2345,
+    "cover": "",
+    "content": "<div style=\"color: #666; padding: 10px;\"><h3>课程介绍</h3><p>本课程为期3天，通过AI智能跟练和真人助教的双重辅导，帮助你快速掌握NLP核心技巧。</p><br/><h3>你将学到</h3><ul><li>NLP基础原理</li><li>情绪调控技巧</li><li>沟通模式优化</li><li>目标设定方法</li></ul></div>"
+  },
+  "2": {
+    "id": 2,
+    "type": "guide",
+    "title": "AI彩虹老师使用指南",
+    "subTitle": "困扰答疑/技巧练习",
+    "price": 0,
+    "originalPrice": 0,
+    "count": 5678,
+    "cover": "",
+    "content": "<div style=\"color: #666; padding: 10px;\"><h3>使用指南</h3><p>欢迎使用AI彩虹老师！这里是你的私人心理成长伙伴。</p><br/><h3>主要功能</h3><ul><li>AI对话：随时倾诉你的心事</li><li>情绪日历：记录每日情绪变化</li><li>心理测评：专业测评助你自我了解</li></ul></div>"
+  },
+  "3": {
+    "id": 3,
+    "type": "resource",
+    "title": "NLP实用技巧15则",
+    "subTitle": "一看就会，一会就能用！",
+    "price": 0,
+    "originalPrice": 0,
+    "count": 3456,
+    "cover": "",
+    "content": "<div style=\"color: #666; padding: 10px;\"><h3>资料介绍</h3><p>精选15个最实用的NLP心理技巧，每个技巧都配有详细的步骤说明和实践案例。</p><br/><p>包含：情绪锚定、心锚设置、视觉化技巧等。</p></div>"
+  }
+}

@@ -1,15 +1,15 @@
 // utils/request.js
 const app = getApp();
+const { API_BASE_URL, USE_MOCK } = require('./config');
 
-const API_BASE_URL = 'https://your-domain.com/api'; // Replace with real API
-const USE_MOCK = true; // Toggle mock data
+// API配置已移至 config.js，部署时只需更改 config.js 中的域名
 
 const mockData = {
     '/auth/login': { token: 'mock-token-123', userInfo: { nickName: '微信用户79889', avatarUrl: '', isMember: true } },
     '/home/recommend': {
         list: [
             { id: 1, tag: '学习社群', title: 'NLP技巧跟练3天学习营', desc: 'AI跟练+真人助教', btnText: '去学习' },
-            { id: 2, tag: '使用指南', title: 'AI李中莹使用指南', desc: '困扰答疑/技巧练习', btnText: '去查看' },
+            { id: 2, tag: '使用指南', title: 'AI彩虹老师使用指南', desc: '困扰答疑/技巧练习', btnText: '去查看' },
             { id: 3, tag: '资料包', title: 'NLP实用技巧15则', desc: '一看就会，一会就能用！', btnText: '去领取' }
         ]
     },

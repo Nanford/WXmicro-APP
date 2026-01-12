@@ -25,7 +25,7 @@
     <view class="empty-card">
       <image class="empty-image" src="/assets/calendar-empty.png" mode="aspectFit"></image>
       <text class="empty-title">今天的情绪日历还没解锁哦</text>
-      <text class="empty-desc">快去和李老师聊聊今天的心情，\n解锁今天的情绪日历吧</text>
+      <text class="empty-desc">快去和彩虹老师聊聊今天的心情，\n解锁今天的情绪日历吧</text>
       <view class="empty-btn" bindtap="goToChat">去成长</view>
     </view>
   </block>

@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "title": "财富动力测评",
+    "desc": "是什么在阻止你赚更多钱？深度剖析你的财富心理模式",
+    "price": 19.9,
+    "originalPrice": 39.9,
+    "count": 3724,
+    "category": "情绪管理",
+    "image": ""
+  },
+  {
+    "id": 2,
+    "title": "金钱惩罚测试",
+    "desc": "测一测你的\"金钱惩罚\"指数，了解潜意识中的金钱障碍",
+    "price": 19.9,
+    "originalPrice": 39.9,
+    "count": 3528,
+    "category": "情绪管理",
+    "image": ""
+  },
+  {
+    "id": 3,
+    "title": "亲子沟通模式测评",
+    "desc": "是复利模式还是负利模式？优化亲子关系的第一步",
+    "price": 19.9,
+    "originalPrice": 39.9,
+    "count": 3507,
+    "category": "亲子教育",
+    "image": ""
+  },
+  {
+    "id": 4,
+    "title": "情绪智力测评",
+    "desc": "理解情绪，是自我成熟的前提，测测你的EQ水平",
+    "price": 19.9,
+    "originalPrice": 39.9,
+    "count": 3644,
+    "category": "情绪管理",
+    "image": ""
+  },
+  {
+    "id": 5,
+    "title": "养育风格测评",
+    "desc": "科学养育，做更少但更对的事，发现最适合你的养育方式",
+    "price": 19.9,
+    "originalPrice": 39.9,
+    "count": 3503,
+    "category": "亲子教育",
+    "image": ""
+  },
+  {
+    "id": 6,
+    "title": "人际关系测评",
+    "desc": "了解你的社交模式，提升人际交往能力",
+    "price": 19.9,
+    "originalPrice": 39.9,
+    "count": 2856,
+    "category": "人际关系",
+    "image": ""
+  },
+  {
+    "id": 7,
+    "title": "压力应对测评",
+    "desc": "测测你的压力应对方式，找到最适合的减压方法",
+    "price": 19.9,
+    "originalPrice": 39.9,
+    "count": 3102,
+    "category": "情绪管理",
+    "image": ""
+  },
+  {
+    "id": 8,
+    "title": "亲密关系测评",
+    "desc": "了解你在亲密关系中的依恋模式",
+    "price": 19.9,
+    "originalPrice": 39.9,
+    "count": 2934,
+    "category": "人际关系",
+    "image": ""
+  }
+]

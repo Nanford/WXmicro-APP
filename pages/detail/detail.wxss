@@ -29,10 +29,13 @@
   z-index: 100;
 }
 
-.back-arrow {
-  color: #fff;
-  font-size: 32rpx;
-  font-weight: bold;
+.back-arrow-icon {
+  width: 20rpx;
+  height: 20rpx;
+  border-top: 4rpx solid #fff;
+  border-left: 4rpx solid #fff;
+  transform: rotate(-45deg);
+  margin-left: 6rpx;
 }
 
 .content-area {

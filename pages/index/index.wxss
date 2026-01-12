@@ -9,7 +9,7 @@
 .ai-card {
   margin: 30rpx;
   margin-top: 20rpx; /* Less top margin since page has navigation bar */
-  min-height: 340rpx;
+  min-height: 420rpx; /* Increased height for larger image */
   background: linear-gradient(135deg, #FFFFFF 0%, #F8F6FF 50%, #FFF5F8 100%);
   border-radius: 32rpx;
   display: flex;
@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 420rpx; /* Prevent text from overlapping with capsule button area */
+  max-width: 380rpx; /* Reduced to give more space to image */
 }
 
 .ai-greeting {
@@ -49,18 +49,20 @@
 }
 
 .ai-card-right {
-  width: 280rpx;
+  width: 340rpx; /* Increased from 280rpx */
+  height: 100%;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-right: 10rpx;
-  padding-top: 20rpx;
+  overflow: hidden; /* Hide overflow for cropping */
+  position: relative;
 }
 
 .ai-avatar {
-  width: 260rpx;
-  height: 320rpx;
-  object-fit: contain;
+  width: 380rpx; /* Enlarged from 260rpx */
+  height: 520rpx; /* Enlarged from 320rpx */
+  object-fit: cover; /* Changed to cover for better cropping */
+  object-position: center 20%; /* Position to show upper body - adjust the 20% to control which part shows */
 }
 
 .ai-action-btn {

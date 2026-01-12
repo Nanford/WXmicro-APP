@@ -1,10 +1,8 @@
 // utils/kimi-ai.js - Kimi AI Integration (Backend Proxy Version)
+const { BASE_URL } = require('./config');
 
-// 后端服务器配置
-// 开发环境：使用本地服务器
-// 生产环境：使用您部署的服务器URL
-const BACKEND_URL = 'http://localhost:3000'; // 开发环境
-// const BACKEND_URL = 'https://your-domain.com'; // 生产环境（需要在微信小程序后台配置）
+// 后端服务器配置已移至 config.js，部署时只需更改 config.js 中的域名
+const BACKEND_URL = BASE_URL;
 
 /**
  * 获取用户唯一ID
