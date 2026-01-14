@@ -7,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const dataManager = require('./data-manager');
+const knowledgeManager = require('./knowledge-manager');
 require('dotenv').config();
 
 const app = express();
@@ -456,13 +457,30 @@ app.get('/api/content/:id', optionalAuth, (req, res) => {
 // ============================================
 
 // 获取或创建会话
-function getSession(userId) {
+function getSession(userId, knowledgeContext = '') {
     if (!sessions.has(userId)) {
+        // 基础系统提示词
+        let systemContent = aiConfig.systemPrompt || SYSTEM_PROMPT;
+
+        // 如果有知识库上下文，附加到系统提示词
+        if (knowledgeContext) {
+            systemContent += knowledgeContext;
+        }
+
         sessions.set(userId, [
-            { role: 'system', content: aiConfig.systemPrompt || SYSTEM_PROMPT }
+            { role: 'system', content: systemContent }
         ]);
     }
     return sessions.get(userId);
+}
+
+// 更新会话的系统提示词（用于注入知识库上下文）
+function updateSessionSystemPrompt(messages, knowledgeContext) {
+    if (messages.length > 0 && messages[0].role === 'system') {
+        const basePrompt = aiConfig.systemPrompt || SYSTEM_PROMPT;
+        messages[0].content = knowledgeContext ? basePrompt + knowledgeContext : basePrompt;
+    }
+    return messages;
 }
 
 // 清理旧会话（保持最近20条消息）
@@ -496,7 +514,24 @@ app.post('/api/chat', async (req, res) => {
             });
         }
 
+        // 从知识库检索相关内容
+        const relevantBlocks = knowledgeManager.searchRelevantKnowledge(message, 3);
+        const knowledgeContext = knowledgeManager.buildKnowledgeContext(relevantBlocks);
+
+        // 调试日志：显示检索到的知识块
+        if (relevantBlocks.length > 0) {
+            console.log(`📖 知识库检索: 用户消息 "${message.substring(0, 30)}..." 匹配到 ${relevantBlocks.length} 个知识块:`);
+            relevantBlocks.forEach((block, i) => {
+                console.log(`   ${i + 1}. ${block.title} (关键词: ${block.keywords.slice(0, 5).join(', ')})`);
+            });
+        } else {
+            console.log(`📖 知识库检索: 用户消息 "${message.substring(0, 30)}..." 未匹配到相关知识`);
+        }
+
+        // 获取会话并更新系统提示词（注入知识库上下文）
         const messages = getSession(userId);
+        updateSessionSystemPrompt(messages, knowledgeContext);
+
         messages.push({ role: 'user', content: message });
 
         const response = await axios.post(
@@ -1222,10 +1257,20 @@ app.use((req, res) => {
 // 启动服务器
 // ============================================
 const PORT = process.env.PORT || 3000;
+
+// 加载知识库
+knowledgeManager.loadKnowledgeBase();
+
 app.listen(PORT, () => {
     console.log(`🚀 AI彩虹老师后端服务运行在端口 ${PORT}`);
     console.log(`📍 API基础地址: http://localhost:${PORT}/api`);
     console.log('');
+
+    // 显示知识库统计
+    const kbStats = knowledgeManager.getStats();
+    console.log(`📚 知识库已加载: ${kbStats.totalBlocks} 个知识块，来自 ${kbStats.sourceFiles} 个文件`);
+    console.log('');
+
     console.log('📋 可用接口列表:');
     console.log('   POST /api/auth/login        - 用户登录');
     console.log('   GET  /api/home/recommend    - 首页推荐');
@@ -1237,7 +1282,7 @@ app.listen(PORT, () => {
     console.log('   GET  /api/user/profile      - 用户信息');
     console.log('   POST /api/user/update_nickname - 更新昵称');
     console.log('   GET  /api/content/:id       - 内容详情');
-    console.log('   POST /api/chat              - AI对话');
+    console.log('   POST /api/chat              - AI对话（已集成知识库）');
     console.log('   POST /api/chat/clear        - 清除对话');
     console.log('   GET  /api/chat/history      - 对话历史');
     console.log('   GET  /api/health            - 健康检查');

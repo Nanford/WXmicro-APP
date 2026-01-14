@@ -106,11 +106,12 @@
   background: #fff;
   border-top: 1rpx solid var(--divider-color);
   display: flex;
-  align-items: flex-end; /* Align bottom for expanding textarea */
-  padding: 20rpx 30rpx;
+  align-items: center; /* Center align all elements vertically */
+  padding: 16rpx 30rpx;
   box-sizing: border-box;
-  padding-bottom: constant(safe-area-inset-bottom);
-  padding-bottom: env(safe-area-inset-bottom);
+  /* Safe area padding for bottom navigation */
+  padding-bottom: calc(16rpx + constant(safe-area-inset-bottom));
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
 }
 
 .input-box {
@@ -139,7 +140,6 @@
   color: #999;
   font-size: 28rpx;
   flex-shrink: 0;
-  margin-bottom: 2rpx; /* Align with input box visual center roughly */
 }
 
 .btn-send.active {
@@ -155,13 +155,13 @@
 }
 
 .btn-voice {
-    width: 64rpx;
-    height: 64rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f5f5f5;
-    border-radius: 50%;
-    margin-right: 16rpx;
-    flex-shrink: 0;
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border-radius: 50%;
+  margin-right: 20rpx;
+  flex-shrink: 0;
 }
