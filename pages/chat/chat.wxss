@@ -75,6 +75,98 @@
   border-top-left-radius: 4rpx;
 }
 
+/* Markdown rendered styles for rich-text component */
+.bubble rich-text {
+  display: block;
+  width: 100%;
+}
+
+/* Code blocks */
+.bubble pre {
+  background: #f5f5f5;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  margin: 8rpx 0;
+  overflow-x: auto;
+}
+
+.bubble code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 24rpx;
+}
+
+/* Inline code */
+.bubble :not(pre) > code {
+  background: #f0f0f0;
+  color: #d63384;
+  padding: 2rpx 8rpx;
+  border-radius: 4rpx;
+}
+
+/* Headers */
+.bubble h1 {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin: 16rpx 0 8rpx 0;
+}
+
+.bubble h2 {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin: 14rpx 0 8rpx 0;
+}
+
+.bubble h3 {
+  font-size: 30rpx;
+  font-weight: bold;
+  margin: 12rpx 0 6rpx 0;
+}
+
+.bubble h4 {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin: 10rpx 0 6rpx 0;
+}
+
+.bubble h5, .bubble h6 {
+  font-size: 26rpx;
+  font-weight: bold;
+  margin: 8rpx 0 4rpx 0;
+}
+
+/* Bold and Italic */
+.bubble strong {
+  font-weight: bold;
+  color: #000;
+}
+
+.bubble em {
+  font-style: italic;
+}
+
+/* Lists */
+.bubble ul, .bubble ol {
+  margin: 8rpx 0;
+  padding-left: 32rpx;
+}
+
+.bubble li {
+  margin: 4rpx 0;
+  line-height: 1.6;
+}
+
+/* Links */
+.bubble a {
+  color: var(--primary-color-start);
+  text-decoration: underline;
+}
+
+/* Paragraphs */
+.bubble p {
+  margin: 8rpx 0;
+  line-height: 1.6;
+}
+
 /* Error message styling */
 .msg-error .bubble {
   background: #fff5f5;

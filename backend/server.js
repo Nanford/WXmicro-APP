@@ -483,15 +483,24 @@ function updateSessionSystemPrompt(messages, knowledgeContext) {
     return messages;
 }
 
-// 清理旧会话（保持最近20条消息）
+// 清理旧会话（保持最近20条消息，并过滤空消息）
 function cleanupSession(messages) {
-    if (messages.length > 21) {
+    // Filter out any empty assistant messages (防止API错误)
+    const filteredMessages = messages.filter(msg => {
+        if (msg.role === 'assistant' && (!msg.content || msg.content.trim() === '')) {
+            console.warn('⚠️ 过滤掉空的assistant消息');
+            return false;
+        }
+        return true;
+    });
+
+    if (filteredMessages.length > 21) {
         return [
-            messages[0],
-            ...messages.slice(-20)
+            filteredMessages[0],  // system message
+            ...filteredMessages.slice(-20)
         ];
     }
-    return messages;
+    return filteredMessages;
 }
 
 // POST /api/chat - 发送消息

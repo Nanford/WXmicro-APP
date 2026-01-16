@@ -1,6 +1,7 @@
 // pages/chat/chat.js
 const kimiAI = require('../../utils/kimi-ai');
 const { formatTime } = require('../../utils/util');
+const { parseMarkdown } = require('../../utils/markdown-parser');
 
 Page({
     data: {
@@ -94,8 +95,13 @@ Page({
             showTime = formatTime(now);
         }
 
+        // Parse markdown for AI messages, but keep original text
+        const content = msg.type === 'ai' ? parseMarkdown(msg.content) : msg.content;
+
         const newMsg = {
             ...msg,
+            content,  // Parsed HTML for display
+            _originalContent: msg.content,  // Keep original text
             time: showTime,
             _rawTime: now
         };
@@ -121,14 +127,19 @@ Page({
         const chars = fullText.split('');
         let idx = 0;
 
-        // Add empty AI message first
+        // Add initial AI message with first character to avoid empty message
+        const now = new Date();
         const messages = [...this.data.messages, {
             type: 'ai',
-            content: '',
-            _rawTime: new Date()
+            content: parseMarkdown(chars[0] || ''),
+            _originalContent: chars[0] || '',
+            _rawTime: now
         }];
         const msgIndex = messages.length - 1;
         this.setData({ messages });
+
+        currentText = chars[0] || '';
+        idx = 1; // Start from second character
 
         const timer = setInterval(() => {
             if (idx >= chars.length) {
@@ -140,9 +151,14 @@ Page({
             const charsToAdd = chars.slice(idx, idx + 2).join('');
             currentText += charsToAdd;
 
-            const upKey = `messages[${msgIndex}].content`;
+            // Parse markdown for current text
+            const parsedContent = parseMarkdown(currentText);
+
+            const contentKey = `messages[${msgIndex}].content`;
+            const originalKey = `messages[${msgIndex}]._originalContent`;
             this.setData({
-                [upKey]: currentText,
+                [contentKey]: parsedContent,
+                [originalKey]: currentText,
                 scrollToView: '' // 先清空
             }, () => {
                 // 滚动到当前消息

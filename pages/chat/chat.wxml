@@ -17,7 +17,7 @@
         
         <view class="bubble-wrapper">
           <view class="bubble">
-            <text user-select>{{item.content}}</text>
+            <rich-text nodes="{{item.content}}" user-select></rich-text>
           </view>
           
           <!-- Retry button for error messages -->
