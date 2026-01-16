@@ -1,6 +1,6 @@
 {
   "setting": {
-    "urlCheck": false,
+    "urlCheck": true,
     "es6": true,
     "postcss": true,
     "minified": true,
@@ -13,51 +13,61 @@
       "outputPath": ""
     },
     "useCompilerPlugins": false,
-    "minifyWXML": true
+    "minifyWXML": true,
+    "compileWorklet": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "minifyWXSS": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "compileType": "miniprogram",
   "simulatorPluginLibVersion": {},
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "node_modules"
+        "value": "node_modules",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "backend"
+        "value": "backend",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": ".git"
+        "value": ".git",
+        "type": "folder"
       },
       {
-        "type": "file",
-        "value": "package.json"
+        "value": "package.json",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "package-lock.json"
+        "value": "package-lock.json",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "create-icons.js"
+        "value": "create-icons.js",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "move-assets.js"
+        "value": "move-assets.js",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": "move-avatar.js"
+        "value": "move-avatar.js",
+        "type": "file"
       },
       {
-        "type": "glob",
-        "value": "*.md"
+        "value": "*.md",
+        "type": "glob"
       }
     ],
     "include": []
   },
-  "appid": "wxfad3c48ef31755f8",
-  "editorSetting": {}
+  "appid": "",
+  "editorSetting": {},
+  "libVersion": "3.13.1"
 }

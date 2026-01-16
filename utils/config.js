@@ -22,7 +22,7 @@ const API_CONFIG = {
     },
     // 生产环境 - 部署后的域名
     production: {
-        BASE_URL: 'https://hcm.hootoolai.com', // 生产环境域名
+        BASE_URL: 'https://hcmai.szhlsn.cn', // 生产环境域名
         USE_MOCK: false
     }
 };

@@ -3,13 +3,16 @@
   <scroll-view 
     class="msg-list" 
     scroll-y 
-    scroll-top="{{scrollTop}}"
+    scroll-into-view="{{scrollToView}}"
+    scroll-with-animation="{{true}}"
+    enhanced="{{true}}"
+    show-scrollbar="{{false}}"
     enable-flex
   >
     <block wx:for="{{messages}}" wx:key="index">
       <view class="time-tip" wx:if="{{item.time}}">{{item.time}}</view>
       
-      <view class="msg-item {{item.type === 'user' ? 'msg-user' : 'msg-ai'}} {{item.error ? 'msg-error' : ''}}">
+      <view id="msg-{{index}}" class="msg-item {{item.type === 'user' ? 'msg-user' : 'msg-ai'}} {{item.error ? 'msg-error' : ''}}">
         <image wx:if="{{item.type === 'ai'}}" class="avatar ai-avatar" src="/assets/ai-avatar-small.png"></image>
         
         <view class="bubble-wrapper">
@@ -27,12 +30,12 @@
       </view>
     </block>
 
-    <view class="typing-indicator" wx:if="{{isTyping}}">
+    <view class="typing-indicator" wx:if="{{isTyping}}" id="typing-area">
         <text>AI正在输入...</text>
     </view>
     
-    <!-- Padding for bottom input -->
-    <view style="height: 120rpx;"></view> 
+    <!-- Padding for bottom input, must be enough for input area + safe area -->
+    <view id="scroll-bottom" style="height: 200rpx;"></view> 
   </scroll-view>
 
   <view class="input-area">

@@ -9,6 +9,7 @@
 .msg-list {
   flex: 1;
   padding: 20rpx 0;
+  padding-bottom: 200rpx; /* 留出输入框空间 */
   box-sizing: border-box;
 }
 

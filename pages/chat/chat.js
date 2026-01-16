@@ -6,7 +6,7 @@ Page({
     data: {
         messages: [], // { type: 'user'|'ai', content: '', time: '', error: false }
         inputValue: '',
-        scrollTop: 0,
+        scrollToView: '', // 用于滚动到指定元素
         isTyping: false,
         fromPage: '' // Track where user came from
     },
@@ -101,9 +101,17 @@ Page({
         };
 
         const messages = [...this.data.messages, newMsg];
+        const newIndex = messages.length - 1;
         this.setData({
             messages,
-            scrollTop: messages.length * 1000 // Force scroll to bottom
+            scrollToView: '' // 先清空，确保能触发滚动
+        }, () => {
+            // 延迟设置滚动目标，确保渲染完成后滚动
+            setTimeout(() => {
+                this.setData({
+                    scrollToView: `msg-${newIndex}`
+                });
+            }, 50);
         });
     },
 
@@ -135,7 +143,12 @@ Page({
             const upKey = `messages[${msgIndex}].content`;
             this.setData({
                 [upKey]: currentText,
-                scrollTop: (msgIndex + 1) * 1000
+                scrollToView: '' // 先清空
+            }, () => {
+                // 滚动到当前消息
+                this.setData({
+                    scrollToView: `msg-${msgIndex}`
+                });
             });
 
             idx += 2;
