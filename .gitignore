@@ -24,6 +24,7 @@ dist/
 # OS files
 .DS_Store
 Thumbs.db
+docs/
 
 # Project config (may contain personal info)
 project.private.config.json
