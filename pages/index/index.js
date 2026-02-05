@@ -1,5 +1,6 @@
 // pages/index/index.js
 const { get } = require('../../utils/request');
+const { BASE_URL } = require('../../utils/config');
 
 Page({
     data: {
@@ -31,13 +32,24 @@ Page({
         this.setData({ greeting });
     },
 
+    // 处理图片URL，将相对路径转为完整URL
+    processImageUrl(url) {
+        if (url && url.startsWith('/')) {
+            return BASE_URL + url;
+        }
+        return url;
+    },
+
     async getRecommendations() {
         try {
             const res = await get('/home/recommend');
             if (res.code === 200) {
-                this.setData({
-                    recommendations: res.data.list
-                });
+                // 处理图片URL
+                const recommendations = res.data.list.map(item => ({
+                    ...item,
+                    image: this.processImageUrl(item.image)
+                }));
+                this.setData({ recommendations });
             }
         } catch (err) {
             console.error(err);

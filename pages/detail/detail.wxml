@@ -2,7 +2,7 @@
 <view class="container detail-container">
   
   <view class="cover-area">
-    <image class="cover-img" src="{{info.cover || '/assets/cover-large.png'}}" mode="aspectFill"></image>
+    <image class="cover-img" src="{{info.cover || '/assets/cover-large.jpg'}}" mode="aspectFill"></image>
     <view class="back-btn" bindtap="handleBack">
         <view class="back-arrow-icon"></view>
     </view>

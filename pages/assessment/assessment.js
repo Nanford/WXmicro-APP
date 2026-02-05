@@ -1,5 +1,6 @@
 // pages/assessment/assessment.js
 const { get } = require('../../utils/request');
+const { BASE_URL } = require('../../utils/config');
 
 Page({
     data: {
@@ -25,9 +26,14 @@ Page({
             const res = await get('/assessment/list');
             wx.hideLoading();
             if (res.code === 200) {
-                this.setData({
-                    list: res.data.list
-                });
+                // 处理图片URL，拼接完整的服务器地址
+                const list = res.data.list.map(item => ({
+                    ...item,
+                    image: item.image && item.image.startsWith('/')
+                        ? BASE_URL + item.image
+                        : item.image
+                }));
+                this.setData({ list });
             }
         } catch (err) {
             wx.hideLoading();
