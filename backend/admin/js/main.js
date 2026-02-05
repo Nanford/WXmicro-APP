@@ -879,12 +879,78 @@ async function deleteContent(id) {
 // ============================================
 // AI配置
 // ============================================
+let cachedModels = []; // 缓存模型列表
+
+async function loadModels(selectedModel = null) {
+    const select = document.getElementById('ai-model');
+    const loadingSpan = document.getElementById('model-loading');
+
+    try {
+        if (loadingSpan) loadingSpan.textContent = '(加载中...)';
+
+        const { data } = await api('/models');
+        cachedModels = data.models || [];
+
+        // 清空并填充下拉框
+        select.innerHTML = '';
+
+        if (cachedModels.length === 0) {
+            select.innerHTML = '<option value="">无可用模型</option>';
+            return;
+        }
+
+        cachedModels.forEach(model => {
+            const option = document.createElement('option');
+            option.value = model.id;
+            // 为推荐模型添加标记
+            const isRecommended = model.id.includes('k2-0905') || model.id.includes('k2-turbo');
+            option.textContent = model.id + (isRecommended ? ' (推荐)' : '');
+            select.appendChild(option);
+        });
+
+        // 设置选中的模型
+        if (selectedModel) {
+            select.value = selectedModel;
+            // 如果选中的模型不在列表中，添加它
+            if (!select.value && selectedModel) {
+                const option = document.createElement('option');
+                option.value = selectedModel;
+                option.textContent = selectedModel + ' (当前使用)';
+                select.insertBefore(option, select.firstChild);
+                select.value = selectedModel;
+            }
+        }
+
+        if (loadingSpan) {
+            loadingSpan.textContent = data.fromCache ? '(离线列表)' : `(${cachedModels.length}个可用)`;
+        }
+
+        return cachedModels;
+    } catch (error) {
+        console.error('加载模型列表失败:', error);
+        if (loadingSpan) loadingSpan.textContent = '(加载失败)';
+
+        // 提供默认选项
+        select.innerHTML = `
+            <option value="kimi-k2-0905-preview">kimi-k2-0905-preview (推荐)</option>
+            <option value="kimi-k2-turbo-preview">kimi-k2-turbo-preview</option>
+            <option value="moonshot-v1-8k">moonshot-v1-8k</option>
+        `;
+
+        if (selectedModel) {
+            select.value = selectedModel;
+        }
+    }
+}
+
 async function loadAIConfig() {
     try {
         const { data } = await api('/ai-config');
 
+        // 先加载模型列表，然后设置当前选中的模型
+        await loadModels(data.model);
+
         document.getElementById('ai-enabled').value = data.enabled ? 'true' : 'false';
-        document.getElementById('ai-model').value = data.model || 'kimi-k2-0905-Preview';
         document.getElementById('ai-temperature').value = data.temperature || 0.7;
         document.getElementById('ai-max-tokens').value = data.maxTokens || 800;
         document.getElementById('ai-system-prompt').value = data.systemPrompt || '';

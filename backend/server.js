@@ -1035,6 +1035,55 @@ app.get('/api/admin/ai-config', authenticateAdmin, (req, res) => {
     res.json(success(aiConfig));
 });
 
+// GET /api/admin/models - 获取可用的AI模型列表
+app.get('/api/admin/models', authenticateAdmin, async (req, res) => {
+    try {
+        // 从 Moonshot/Kimi API 获取模型列表
+        const response = await axios.get('https://api.moonshot.cn/v1/models', {
+            headers: {
+                'Authorization': `Bearer ${KIMI_API_KEY}`
+            },
+            timeout: 10000
+        });
+
+        const models = response.data.data || [];
+
+        // 格式化模型列表，只返回需要的信息
+        const modelList = models.map(model => ({
+            id: model.id,
+            name: model.id,
+            owned_by: model.owned_by || 'moonshot'
+        }));
+
+        // 按名称排序，推荐的模型排在前面
+        modelList.sort((a, b) => {
+            // k2 模型优先
+            const aIsK2 = a.id.includes('k2');
+            const bIsK2 = b.id.includes('k2');
+            if (aIsK2 && !bIsK2) return -1;
+            if (!aIsK2 && bIsK2) return 1;
+            return a.id.localeCompare(b.id);
+        });
+
+        res.json(success({ models: modelList }));
+    } catch (err) {
+        console.error('获取模型列表失败:', err.message);
+
+        // 如果API调用失败，返回默认模型列表
+        const defaultModels = [
+            { id: 'kimi-k2-0905-preview', name: 'kimi-k2-0905-preview', owned_by: 'moonshot' },
+            { id: 'kimi-k2-turbo-preview', name: 'kimi-k2-turbo-preview', owned_by: 'moonshot' },
+            { id: 'kimi-k2-thinking', name: 'kimi-k2-thinking', owned_by: 'moonshot' },
+            { id: 'kimi-k2-thinking-turbo', name: 'kimi-k2-thinking-turbo', owned_by: 'moonshot' },
+            { id: 'moonshot-v1-8k', name: 'moonshot-v1-8k', owned_by: 'moonshot' },
+            { id: 'moonshot-v1-32k', name: 'moonshot-v1-32k', owned_by: 'moonshot' },
+            { id: 'moonshot-v1-128k', name: 'moonshot-v1-128k', owned_by: 'moonshot' }
+        ];
+
+        res.json(success({ models: defaultModels, fromCache: true }));
+    }
+});
+
 // PUT /api/admin/ai-config - 更新AI配置
 app.put('/api/admin/ai-config', authenticateAdmin, (req, res) => {
     const { systemPrompt, model, temperature, maxTokens, enabled } = req.body;
