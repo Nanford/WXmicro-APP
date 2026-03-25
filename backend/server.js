@@ -8,6 +8,7 @@ const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const dataManager = require('./data-manager');
 const knowledgeManager = require('./knowledge-manager');
+const wechatAuth = require('./wechat-auth');
 require('dotenv').config();
 
 const app = express();
@@ -21,7 +22,11 @@ const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'ai-rainbow-admin-secre
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 const KIMI_API_URL = 'https://api.moonshot.cn/v1/chat/completions';
-const KIMI_API_KEY = process.env.KIMI_API_KEY;
+
+// 动态获取 KIMI API Key（从 envConfig 读取）
+function getKimiApiKey() {
+    return envConfig.kimiApiKey || process.env.KIMI_API_KEY || '';
+}
 
 // ============================================
 // CORS 配置
@@ -181,6 +186,7 @@ const error = (code, message) => ({
 // ============================================
 
 // POST /api/auth/login - 微信登录
+// 支持开发模式（模拟）和生产模式（真实微信API）
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { code, encryptedData, iv } = req.body;
@@ -189,25 +195,72 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(400).json(error(400, '缺少登录凭证'));
         }
 
-        // 开发模式：生成模拟用户（生产环境需要调用微信API验证）
-        // 真实环境应：1. 用code换取session_key 2. 解密encryptedData获取手机号
-        const userId = 'user_' + Date.now();
-        const userInfo = {
-            id: userId,
-            nickName: '微信用户' + Math.floor(Math.random() * 90000 + 10000),
-            avatarUrl: '',
-            isMember: false,
-            memberExpiry: null,
-            phone: '138****8888',
-            createdAt: new Date().toISOString()
-        };
+        // 使用微信API获取openid和session_key
+        const sessionResult = await wechatAuth.code2Session(code);
+        const { openid, sessionKey, isDev } = sessionResult;
+
+        if (isDev) {
+            console.log('⚠️ 使用开发模式登录');
+        }
+
+        // 解密手机号（如果提供了加密数据）
+        let phoneNumber = '';
+        let maskedPhone = '';
+        if (encryptedData && iv) {
+            try {
+                const phoneData = wechatAuth.decryptData(sessionKey, encryptedData, iv);
+                if (phoneData) {
+                    phoneNumber = phoneData.purePhoneNumber || phoneData.phoneNumber;
+                    maskedPhone = wechatAuth.maskPhoneNumber(phoneNumber);
+                }
+            } catch (decryptErr) {
+                console.warn('手机号解密失败，继续登录:', decryptErr.message);
+                maskedPhone = '未授权';
+            }
+        } else {
+            maskedPhone = '未授权';
+        }
+
+        // 检查用户是否已存在
+        let userInfo = users.get(openid);
+        const isNewUser = !userInfo;
+
+        if (isNewUser) {
+            // 新用户
+            userInfo = {
+                id: openid,
+                openid: openid,
+                nickName: '微信用户' + Math.floor(Math.random() * 90000 + 10000),
+                avatarUrl: '',
+                isMember: false,
+                memberExpiry: null,
+                phone: phoneNumber,
+                maskedPhone: maskedPhone,
+                createdAt: new Date().toISOString(),
+                lastLoginAt: new Date().toISOString()
+            };
+            console.log('✅ 新用户注册:', openid.substring(0, 10) + '...');
+        } else {
+            // 老用户更新登录时间和手机号
+            if (phoneNumber) {
+                userInfo.phone = phoneNumber;
+                userInfo.maskedPhone = maskedPhone;
+            }
+            userInfo.lastLoginAt = new Date().toISOString();
+            console.log('✅ 老用户登录:', openid.substring(0, 10) + '...');
+        }
 
         // 存储用户信息
-        users.set(userId, userInfo);
+        users.set(openid, userInfo);
 
-        // 生成JWT Token
+        // 持久化用户数据到文件
+        const usersObj = {};
+        users.forEach((v, k) => { usersObj[k] = v; });
+        dataManager.saveData('users', usersObj);
+
+        // 生成JWT Token（使用openid作为userId）
         const token = jwt.sign(
-            { userId, nickName: userInfo.nickName },
+            { userId: openid, nickName: userInfo.nickName },
             JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -218,13 +271,16 @@ app.post('/api/auth/login', async (req, res) => {
                 nickName: userInfo.nickName,
                 avatarUrl: userInfo.avatarUrl,
                 isMember: userInfo.isMember,
-                memberExpiry: userInfo.memberExpiry
-            }
+                memberExpiry: userInfo.memberExpiry,
+                phone: userInfo.maskedPhone
+            },
+            isNewUser,
+            isDev
         }));
 
     } catch (err) {
         console.error('Login error:', err);
-        res.status(500).json(error(500, '登录失败，请稍后重试'));
+        res.status(500).json(error(500, '登录失败: ' + err.message));
     }
 });
 
@@ -554,7 +610,7 @@ app.post('/api/chat', async (req, res) => {
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${KIMI_API_KEY}`
+                    'Authorization': `Bearer ${getKimiApiKey()}`
                 },
                 timeout: 30000
             }
@@ -640,8 +696,29 @@ let aiConfig = dataManager.loadData('ai-config') || {
     enabled: true
 };
 
-// 用户数据
-let users = dataManager.loadData('users') || {};
+// 加载环境配置（从 JSON 持久化，首次从 .env 迁移）
+let envConfig = dataManager.loadData('env-config');
+if (!envConfig || !envConfig.kimiApiKey === undefined || Array.isArray(envConfig)) {
+    // 首次启动：从 .env 迁移到 JSON
+    envConfig = {
+        kimiApiKey: process.env.KIMI_API_KEY || '',
+        wechatAppid: process.env.WECHAT_APPID || '',
+        wechatAppSecret: process.env.WECHAT_APP_SECRET || '',
+        updatedAt: new Date().toISOString()
+    };
+    dataManager.saveData('env-config', envConfig);
+    console.log('✅ 环境配置已从 .env 迁移到 data/env-config.json');
+}
+
+// 初始化微信认证模块（动态获取配置）
+wechatAuth.init(() => ({
+    wechatAppid: envConfig.wechatAppid,
+    wechatAppSecret: envConfig.wechatAppSecret
+}));
+
+// 用户数据（使用Map存储，支持openid作为key）
+const usersData = dataManager.loadData('users') || {};
+const users = new Map(Object.entries(usersData));
 
 // POST /api/admin/login - 管理员登录
 app.post('/api/admin/login', (req, res) => {
@@ -693,6 +770,10 @@ app.get('/api/admin/stats', authenticateAdmin, (req, res) => {
         aiConfig: {
             enabled: aiConfig.enabled,
             model: aiConfig.model
+        },
+        wechat: {
+            configured: wechatAuth.isConfigured(),
+            appid: envConfig.wechatAppid ? envConfig.wechatAppid.substring(0, 6) + '...' : '未配置'
         }
     }));
 });
@@ -1041,7 +1122,7 @@ app.get('/api/admin/models', authenticateAdmin, async (req, res) => {
         // 从 Moonshot/Kimi API 获取模型列表
         const response = await axios.get('https://api.moonshot.cn/v1/models', {
             headers: {
-                'Authorization': `Bearer ${KIMI_API_KEY}`
+                'Authorization': `Bearer ${getKimiApiKey()}`
             },
             timeout: 10000
         });
@@ -1100,6 +1181,67 @@ app.put('/api/admin/ai-config', authenticateAdmin, (req, res) => {
 
     dataManager.saveData('ai-config', aiConfig);
     res.json(success(aiConfig, 'AI配置更新成功'));
+});
+
+// ============================================
+// 环境配置管理API
+// ============================================
+
+// 脱敏工具函数
+function maskSecret(value, showChars = 6) {
+    if (!value || value.length <= showChars) return value || '';
+    return value.substring(0, showChars) + '****' + value.substring(value.length - 4);
+}
+
+// GET /api/admin/env-config - 获取环境配置（敏感字段脱敏）
+app.get('/api/admin/env-config', authenticateAdmin, (req, res) => {
+    res.json(success({
+        kimiApiKey: maskSecret(envConfig.kimiApiKey, 6),
+        kimiApiKeySet: !!(envConfig.kimiApiKey && envConfig.kimiApiKey.length > 0),
+        wechatAppid: envConfig.wechatAppid || '',
+        wechatAppSecret: maskSecret(envConfig.wechatAppSecret, 6),
+        wechatAppSecretSet: !!(envConfig.wechatAppSecret && envConfig.wechatAppSecret.length > 0),
+        serverPort: process.env.PORT || 3000,
+        updatedAt: envConfig.updatedAt
+    }));
+});
+
+// PUT /api/admin/env-config - 更新环境配置
+app.put('/api/admin/env-config', authenticateAdmin, (req, res) => {
+    const { kimiApiKey, wechatAppid, wechatAppSecret } = req.body;
+
+    // 只更新非空且非脱敏值的字段
+    if (kimiApiKey !== undefined && !kimiApiKey.includes('****')) {
+        envConfig.kimiApiKey = kimiApiKey;
+    }
+    if (wechatAppid !== undefined) {
+        envConfig.wechatAppid = wechatAppid;
+    }
+    if (wechatAppSecret !== undefined && !wechatAppSecret.includes('****')) {
+        envConfig.wechatAppSecret = wechatAppSecret;
+    }
+
+    envConfig.updatedAt = new Date().toISOString();
+    dataManager.saveData('env-config', envConfig);
+
+    console.log('✅ 环境配置已更新');
+
+    res.json(success({
+        kimiApiKey: maskSecret(envConfig.kimiApiKey, 6),
+        kimiApiKeySet: !!(envConfig.kimiApiKey && envConfig.kimiApiKey.length > 0),
+        wechatAppid: envConfig.wechatAppid || '',
+        wechatAppSecret: maskSecret(envConfig.wechatAppSecret, 6),
+        wechatAppSecretSet: !!(envConfig.wechatAppSecret && envConfig.wechatAppSecret.length > 0),
+        serverPort: process.env.PORT || 3000,
+        updatedAt: envConfig.updatedAt
+    }, '环境配置更新成功'));
+});
+
+// GET /api/config/wechat - 公开接口，前端获取微信 appid
+app.get('/api/config/wechat', (req, res) => {
+    res.json(success({
+        appid: envConfig.wechatAppid || ''
+    }));
 });
 
 // ============================================
@@ -1343,7 +1485,9 @@ app.listen(PORT, () => {
     console.log('   POST /api/chat              - AI对话（已集成知识库）');
     console.log('   POST /api/chat/clear        - 清除对话');
     console.log('   GET  /api/chat/history      - 对话历史');
+    console.log('   GET  /api/config/wechat     - 微信配置（公开）');
     console.log('   GET  /api/health            - 健康检查');
     console.log('');
+    console.log(`🔑 环境配置: KIMI Key ${envConfig.kimiApiKey ? '已配置' : '未配置'}, 微信 ${wechatAuth.isConfigured() ? '已配置' : '未配置'}`);
     console.log(`❤️  健康检查: http://localhost:${PORT}/api/health`);
 });

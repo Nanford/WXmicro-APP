@@ -35,6 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // AI配置表单
     document.getElementById('ai-config-form').addEventListener('submit', saveAIConfig);
 
+    // 环境配置表单
+    document.getElementById('env-config-form').addEventListener('submit', saveEnvConfig);
+
     // 拖拽上传
     setupDragDrop();
 });
@@ -157,6 +160,7 @@ function showPage(pageName) {
         'recommendations': '推荐管理',
         'contents': '内容管理',
         'ai-config': 'AI配置',
+        'env-config': '环境配置',
         'settings': '系统设置'
     };
     document.getElementById('page-title').textContent = titles[pageName] || pageName;
@@ -180,6 +184,9 @@ function showPage(pageName) {
             break;
         case 'ai-config':
             loadAIConfig();
+            break;
+        case 'env-config':
+            loadEnvConfig();
             break;
         case 'settings':
             loadBackups();
@@ -1083,4 +1090,65 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// ============================================
+// 环境配置
+// ============================================
+async function loadEnvConfig() {
+    try {
+        const { data } = await api('/env-config');
+
+        document.getElementById('env-kimi-key').value = data.kimiApiKey || '';
+        document.getElementById('env-wechat-appid').value = data.wechatAppid || '';
+        document.getElementById('env-wechat-secret').value = data.wechatAppSecret || '';
+        document.getElementById('env-port').value = data.serverPort || 3000;
+
+        // 显示状态
+        const kimiStatus = document.getElementById('env-kimi-key-status');
+        if (data.kimiApiKeySet) {
+            kimiStatus.textContent = '✅ 已配置';
+            kimiStatus.style.color = '#4caf50';
+        } else {
+            kimiStatus.textContent = '⚠️ 未配置（AI服务不可用）';
+            kimiStatus.style.color = '#ff9800';
+        }
+
+        // 显示更新时间
+        const updatedAt = document.getElementById('env-updated-at');
+        if (data.updatedAt) {
+            updatedAt.textContent = `上次更新: ${new Date(data.updatedAt).toLocaleString()}`;
+        }
+    } catch (error) {
+        console.error('加载环境配置失败:', error);
+    }
+}
+
+async function saveEnvConfig(e) {
+    e.preventDefault();
+
+    const data = {
+        kimiApiKey: document.getElementById('env-kimi-key').value,
+        wechatAppid: document.getElementById('env-wechat-appid').value,
+        wechatAppSecret: document.getElementById('env-wechat-secret').value
+    };
+
+    try {
+        await api('/env-config', { method: 'PUT', body: JSON.stringify(data) });
+        showToast('环境配置保存成功');
+        loadEnvConfig(); // 重新加载以显示脱敏值
+    } catch (error) {
+        console.error('保存环境配置失败:', error);
+    }
+}
+
+function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🔒 隐藏';
+    } else {
+        input.type = 'password';
+        btn.textContent = '👁️ 显示';
+    }
 }

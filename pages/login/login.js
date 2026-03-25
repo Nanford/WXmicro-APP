@@ -32,8 +32,28 @@ Page({
         }
 
         if (e.detail.errMsg === 'getPhoneNumber:ok') {
-            const { code, encryptedData, iv } = e.detail;
-            this.handleLogin(code, encryptedData, iv);
+            const { encryptedData, iv } = e.detail;
+
+            // 先调用 wx.login() 获取登录 code
+            wx.login({
+                success: (loginRes) => {
+                    if (loginRes.code) {
+                        // 使用登录code和手机号加密数据一起发送
+                        this.handleLogin(loginRes.code, encryptedData, iv);
+                    } else {
+                        wx.showToast({
+                            title: '获取登录凭证失败',
+                            icon: 'none'
+                        });
+                    }
+                },
+                fail: () => {
+                    wx.showToast({
+                        title: '微信登录失败',
+                        icon: 'none'
+                    });
+                }
+            });
         } else {
             wx.showToast({
                 title: '需要授权手机号才能登录',
